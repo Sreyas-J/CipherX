@@ -1,0 +1,7 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"AES_tb_func_impl.v" \
+"../../../../../AES.srcs/sim_1/new/AES_tb.v" \
+
+# Do not sort compile order
+nosort

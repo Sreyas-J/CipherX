@@ -1,0 +1,27 @@
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: /tools/Xilinx/Vivado/2023.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot AES_tb_behav xil_defaultlib.AES_tb xil_defaultlib.glbl -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 128 for port 'dia' [/home/dell/Desktop/projects/CipherX/AES/AES.srcs/sim_1/new/AES_tb.v:20]
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.ram
+Compiling module xil_defaultlib.rotword
+Compiling module xil_defaultlib.sbox
+Compiling module xil_defaultlib.subwordx
+Compiling module xil_defaultlib.rconx
+Compiling module xil_defaultlib.keyExpansion
+Compiling module xil_defaultlib.addRoundKey
+Compiling module xil_defaultlib.subBytes_default
+Compiling module xil_defaultlib.shiftRows
+Compiling module xil_defaultlib.mixColumns
+Compiling module xil_defaultlib.AES_Encrypt
+Compiling module xil_defaultlib.AES_CMAC
+Compiling module xil_defaultlib.AES_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot AES_tb_behav
