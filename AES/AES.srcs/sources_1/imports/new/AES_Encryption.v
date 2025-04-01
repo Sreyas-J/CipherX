@@ -5,14 +5,16 @@ module AES_Encrypt(
     input [(128*11)-1:0] fullkeys,
     output reg [127:0] out,
     output reg complete,
-    output reg [5:0] cntr
+    output reg [5:0] cntr,
+    output reg [127:0] sIn,
+    input [127:0] sOut
 );
 
     reg [127:0] addrkIn;
     reg [7:0] rnd;
     wire [127:0] addrkOut;
-    reg [127:0] sIn;
-    wire [127:0] sOut;
+//    reg [127:0] sIn;
+//    wire [127:0] sOut;
     reg [127:0] rIn;
     wire [127:0] rOut;
     reg [127:0] mIn;
@@ -24,7 +26,7 @@ module AES_Encrypt(
 
     
     addRoundKey addrk1 (addrkIn, addrkOut, key);
-    subBytes s(sIn,sOut);
+//    subBytes s(sIn,sOut);
     shiftRows r(rIn,rOut);
     mixColumns m(mIn,mOut);
     
@@ -110,7 +112,7 @@ module AES_Encrypt(
         end
         
         
-//        $display("key:%h cntr:%d done:%d in:%h addrkIn:%h addrkOut:%h sIn:%h sOut:%h rIn:%h rOut:%h mixColIn:%h mixColOut:%h", key, cntr, complete,in, addrkIn, addrkOut, sIn, sOut, rIn, rOut, mIn, mOut);
+        $display("key:%h cntr:%d done:%d in:%h addrkIn:%h addrkOut:%h sIn:%h sOut:%h rIn:%h rOut:%h mixColIn:%h mixColOut:%h", key, cntr, complete,in, addrkIn, addrkOut, sIn, sOut, rIn, rOut, mIn, mOut);
     end
 
 endmodule

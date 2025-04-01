@@ -43,10 +43,10 @@ module AES_tb;
     initial begin
 //        $dumpfile("simulation.vcd");
 //        $dumpvars(0, AES_tb);
-        $readmemh("/home/dell/Desktop/IIITB/5thSem/FPGA/VivadoProjects/FPGA_project/image128.txt", BRAM1.ram);
+        $readmemh("/home/dell/Desktop/projects/CipherX/image128.txt", BRAM1.ram);
 
         // Open CSV file
-        file = $fopen("/home/dell/Desktop/IIITB/5thSem/FPGA/VivadoProjects/FPGA_project/output.csv", "w");
+        file = $fopen("/home/dell/Desktop/projects/CipherX/output.csv", "w");
         $fdisplay(file, "cntr,size,messAddra,cmacAddra,messIn,cmacIn,encrypted128,done,tag");
 
         clk = 0;

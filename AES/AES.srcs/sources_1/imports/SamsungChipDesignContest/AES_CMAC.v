@@ -45,13 +45,17 @@ module AES_CMAC#(
     
     reg [1:0] rem;
     wire [3:0] keyRnd;
-    reg rst;
+    reg rst,sflg;
+    
+    wire [127:0] sIn;
+    wire [127:0] sOut,sIn1,rot;
 //    reg [127:0] tag;
-
-    keyExpansion ke (clk,reset,key128, fullkeys,keyRnd);
+    subBytes s(sIn,sOut);
+    keyExpansion ke (clk,reset,key128, fullkeys,keyRnd,rot,sOut);
+    assign sIn=sflg?sIn1:rot;
 
 //    ram BRAM1 (clk, 1'b1,1'b1,1'b0,1'b0, messAddra,cmacAddra, dia, messIn,dib,cmacIn);
-    AES_Encrypt inst1 (clk,rst, in, fullkeys, encrypted,flag,cntr);
+    AES_Encrypt inst1 (clk,rst, in, fullkeys, encrypted,flag,cntr,sIn1,sOut);
 
     always @(posedge clk) begin
         K1 = (L << 1) ^ (L[127] ? C : 0); 
@@ -69,8 +73,10 @@ module AES_CMAC#(
             calc<=2'd0;
             size<=len/128;
             rst<=1'b1;
+            sflg<=1'b0;
         end  
         else if(keyRnd>=11) begin
+            sflg<=1'b1;
             if(rst==0)begin
                     if(messDone==1'b0) begin
 
@@ -143,8 +149,9 @@ module AES_CMAC#(
              end
             rst<=1'b0;
         end
+
         
-        $display("keyRnd:%d cntr:%d flg:%b calc:%d L1:%h messAddra:%d cmacAddra:%d messIn:%h cmacIn:%h in:%h cmacReg:%h encrypted:%h bufFlg:%d messDone:%b cmacDone:%b tag:%h",keyRnd,cntr,flag,calc, L,messAddra,cmacAddra,messIn,cmacIn,in,cmacReg,encrypted,bufFlg,messDone,cmacDone,tag);
+//        $display("keyRnd:%d cntr:%d flg:%b calc:%d L1:%h messAddra:%d cmacAddra:%d messIn:%h cmacIn:%h in:%h cmacReg:%h encrypted:%h bufFlg:%d messDone:%b cmacDone:%b tag:%h",keyRnd,cntr,flag,calc, L,messAddra,cmacAddra,messIn,cmacIn,in,cmacReg,encrypted,bufFlg,messDone,cmacDone,tag);
 //        $display("%h %h %h %h %h %h %h %h %h %h %h",fullkeys[(128*11-1)-:128],fullkeys[(128*10-1)-:128],fullkeys[(128*9-1)-:128],fullkeys[(128*8-1)-:128],fullkeys[(128*7-1)-:128],fullkeys[(128*6-1)-:128],fullkeys[(128*5-1)-:128],fullkeys[(128*4-1)-:128],fullkeys[(128*3-1)-:128],fullkeys[(128*2-1)-:128],fullkeys[(128*1-1)-:128]);
     end
 
