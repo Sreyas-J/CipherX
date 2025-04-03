@@ -48,11 +48,12 @@ module AES_CMAC#(
     reg rst,sflg;
     
     wire [127:0] sIn;
-    wire [127:0] sOut,sIn1,rot;
+    wire [127:0] sOut,sIn1;
+    wire [31:0] rot;
 //    reg [127:0] tag;
     subBytes s(sIn,sOut);
     keyExpansion ke (clk,reset,key128, fullkeys,keyRnd,rot,sOut);
-    assign sIn=sflg?sIn1:rot;
+    assign sIn=sflg?sIn1:{{96{1'b0}},rot};
 
 //    ram BRAM1 (clk, 1'b1,1'b1,1'b0,1'b0, messAddra,cmacAddra, dia, messIn,dib,cmacIn);
     AES_Encrypt inst1 (clk,rst, in, fullkeys, encrypted,flag,cntr,sIn1,sOut);

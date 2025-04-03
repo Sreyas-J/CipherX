@@ -432,21 +432,6 @@ module rotword(input [31:0] x, output [31:0] rotword);
            assign rotword={x[23:0],x[31:24]};
 //        end
    endmodule
- 
-module subwordx(input [31:0] a, output wire [31:0] subw);
-//        input [31:0] a;
-//        begin
-//            subwordx[7:0]=c(a[7:0]);
-            sbox s1(a[7:0],subw[7:0]);
-            sbox s2(a[15:8],subw[15:8]);
-            sbox s3(a[23:16],subw[23:16]);
-            sbox s4(a[31:24],subw[31:24]);
-            
-//            subwordx[15:8]=c(a[15:8]);
-//            subwordx[23:16]=c(a[23:16]);
-//            subwordx[31:24]=c(a[31:24]);
-//        end
-  endmodule
   
   module rconx (input [3:0] r,output reg [31:0] rc);
 //        input [31:0] r;
