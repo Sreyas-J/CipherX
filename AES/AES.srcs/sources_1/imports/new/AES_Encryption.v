@@ -7,12 +7,15 @@ module AES_Encrypt(
     output reg complete,
     output reg [5:0] cntr,
     output reg [127:0] sIn,
-    input [127:0] sOut
+    input [127:0] sOut,
+    output reg [127:0] addrkIn,
+    output reg [127:0] key,
+    input [127:0] addrkOut
 );
 
-    reg [127:0] addrkIn;
+//    reg [127:0] addrkIn;
     reg [7:0] rnd;
-    wire [127:0] addrkOut;
+//    wire [127:0] addrkOut;
 //    reg [127:0] sIn;
 //    wire [127:0] sOut;
     reg [127:0] rIn;
@@ -22,10 +25,10 @@ module AES_Encrypt(
     
     reg [127:0] pipR;    
 //    reg [5:0] cntr;
-    reg [127:0] key;
+//    reg [127:0] key;
 
     
-    addRoundKey addrk1 (addrkIn, addrkOut, key);
+//    addRoundKey addrk1 (addrkIn, addrkOut, key);
 //    subBytes s(sIn,sOut);
     shiftRows r(rIn,rOut);
     mixColumns m(mIn,mOut);

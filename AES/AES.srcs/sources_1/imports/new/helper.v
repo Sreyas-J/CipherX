@@ -352,18 +352,21 @@ endmodule
 //endmodule
 
 
-module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (10 + 1)) - 1:0] w,output wire [3:0] round,output reg [31:0] sIn,input [31:0] x);
+module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (10 + 1)) - 1:0] w,output wire [3:0] round,output reg [31:0] sIn,input [31:0] x,output reg [31:0] xorIn1,output reg [31:0] xorIn2, input [31:0] xorOut);
     reg cmplt,buff;
     reg [6:0] cntr;
     wire [31:0] rconv;
-    reg [31:0] temp;
+    reg tmpFlg;
+
+//    reg [31:0] temp;
     wire [2:0] rem;
-    wire [31:0] rot,y;
+    wire [31:0] rot,temp;
     rotword rot1(temp,rot);
 //    subwordx sub1(rot, x);
     rconx rcon1(round,rconv);
     assign round=cntr/7;
-    assign rem=cntr%7;
+    assign rem=cntr%7; 
+    assign temp=tmpFlg?key[0+:32]:xorOut;
 //    assign y=x^rconv;
     
     always@(posedge clk)begin
@@ -372,16 +375,17 @@ module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (
             w[128*11-1-:128]<=key;
             cmplt<=1'b0;
             cntr<=6'd7;
+            tmpFlg<=1'b1;
 //            rem<=3'd0;
 //            round<=4'd1;
-            temp<=key[0+:32];
+//            temp<=key[0+:32];
         end
         else if(cmplt==1'b0)begin
 //            round<=cntr/7;
 //            rem<=cntr%7;
             cntr<=cntr+1;
             if(rem==0)begin
-                if(round>1) w[128*(11-round)+:32]<=temp;
+                if(round>1) w[128*(11-round)+:32]<=xorOut;
 //                rot <= rotword(temp); 
 //                buff<=1'b0;
             end
@@ -393,28 +397,26 @@ module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (
                   sIn<=rot;
             end
             else if(rem==2)begin
-               temp <= x^rconv; 
-//               rem<=cntr%7;
-//               cntr<=cntr+1;
+//               temp <= x^rconv; 
+                xorIn1<=x;
+                xorIn2<=rconv;
+                tmpFlg<=1'b0;
             end
             else if(rem==3)begin
-//                if(buff==1'b0)begin
-//                    temp<=w[128*round+(rem-1)*32+:32];
-//                    buff<=1'b1;
-//                end
-//                else begin
-                    temp<=w[128*(11-round)+3*32+:32]^temp;
-//                    rem<=cntr%7;
-//                    cntr<=cntr+1;
-//                end
+
+//                temp<=w[128*(11-round)+3*32+:32]^temp;
+                xorIn1<=w[128*(11-round)+3*32+:32];
+                xorIn2<=xorOut;             
             end
             else begin
-                w[128*(10-round)+(7-rem)*32+:32]<=temp;
-                temp<=w[128*(11-round)+(6-rem)*32+:32]^temp;
+                w[128*(10-round)+(7-rem)*32+:32]<=xorOut;
+//                temp<=w[128*(11-round)+(6-rem)*32+:32]^temp;
+                xorIn1<=w[128*(11-round)+(6-rem)*32+:32];
+                xorIn2<=xorOut;
             end
 
             
-            $display("keyCounter: %d  round:%d buff:%b rem:%d in:%h rot: %h rin:%h sub:%h rconv: %h temp:%h w:%h",cntr,round,buff,rem,w[128*(11-round)+(6-rem)*32+:32],rot,temp,x,rconv,temp,w);
+            $display("keyCounter: %d  round:%d buff:%b rem:%d in:%h rot: %h rin:%h sub:%h rconv: %h xorIn1:%h xorIn2:%h xorOut:%h temp:%h w:%h",cntr,round,buff,rem,w[128*(11-round)+(6-rem)*32+:32],rot,temp,x,rconv,xorIn1,xorIn2,xorOut,temp,w);
             
             if(cntr==7'd78) cmplt<=1'b1;
         end
