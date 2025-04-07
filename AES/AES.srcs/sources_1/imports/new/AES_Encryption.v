@@ -112,7 +112,7 @@ module AES_Encrypt(
         end
         
         
-        $display("key:%h cntr:%d done:%d in:%h addrkIn:%h addrkOut:%h sIn:%h sOut:%h rIn:%h rOut:%h mixColIn:%h mixColOut:%h", key, cntr, complete,in, addrkIn, addrkOut, sIn, sOut, rIn, rOut, mIn, mOut);
+//        $display("key:%h cntr:%d done:%d in:%h addrkIn:%h addrkOut:%h sIn:%h sOut:%h rIn:%h rOut:%h mixColIn:%h mixColOut:%h", key, cntr, complete,in, addrkIn, addrkOut, sIn, sOut, rIn, rOut, mIn, mOut);
     end
 
 endmodule

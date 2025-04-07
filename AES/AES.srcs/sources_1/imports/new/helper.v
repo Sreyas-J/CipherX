@@ -352,30 +352,33 @@ endmodule
 //endmodule
 
 
-module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (10 + 1)) - 1:0] w,output reg [3:0] round,output [31:0] rot,input [31:0] x);
+module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (10 + 1)) - 1:0] w,output wire [3:0] round,output reg [31:0] sIn,input [31:0] x);
     reg cmplt,buff;
     reg [6:0] cntr;
     wire [31:0] rconv;
     reg [31:0] temp;
-    reg [2:0] rem;
-    
+    wire [2:0] rem;
+    wire [31:0] rot,y;
     rotword rot1(temp,rot);
 //    subwordx sub1(rot, x);
     rconx rcon1(round,rconv);
+    assign round=cntr/7;
+    assign rem=cntr%7;
+//    assign y=x^rconv;
     
     always@(posedge clk)begin
         
         if(reset)begin
             w[128*11-1-:128]<=key;
             cmplt<=1'b0;
-            cntr<=6'd8;
-            rem<=3'd0;
-            round<=4'd1;
+            cntr<=6'd7;
+//            rem<=3'd0;
+//            round<=4'd1;
             temp<=key[0+:32];
         end
         else if(cmplt==1'b0)begin
-            round<=cntr/7;
-            rem<=cntr%7;
+//            round<=cntr/7;
+//            rem<=cntr%7;
             cntr<=cntr+1;
             if(rem==0)begin
                 if(round>1) w[128*(11-round)+:32]<=temp;
@@ -387,6 +390,7 @@ module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (
 //                rem<=cntr%7;
 //                cntr<=cntr+1;
 //                rconv <= rconx(round); 
+                  sIn<=rot;
             end
             else if(rem==2)begin
                temp <= x^rconv; 
@@ -410,9 +414,9 @@ module keyExpansion(input clk,input reset,input [127:0] key,output reg [(128 * (
             end
 
             
-//            $display("keyCounter: %d  round:%d buff:%b rem:%d in:%h rot: %h rin:%h sub:%h rconv: %h temp:%h w:%h",cntr,round,buff,rem,w[128*(11-round)+(6-rem)*32+:32],rot,temp,x,rconv,temp,w);
+            $display("keyCounter: %d  round:%d buff:%b rem:%d in:%h rot: %h rin:%h sub:%h rconv: %h temp:%h w:%h",cntr,round,buff,rem,w[128*(11-round)+(6-rem)*32+:32],rot,temp,x,rconv,temp,w);
             
-            if(cntr==7'd79) cmplt<=1'b1;
+            if(cntr==7'd78) cmplt<=1'b1;
         end
 //        $display("%h",w);
     end   
@@ -449,11 +453,13 @@ module rotword(input [31:0] x, output [31:0] rotword);
             4'h9: rc=32'h1b000000;
             4'ha: rc=32'h36000000;
             
-            4'h0: rc=32'h00000000;
-            4'hb: rc=32'h00000000;
-            4'hc: rc=32'h00000000;
-            4'he: rc=32'h00000000;
-            4'hf: rc=32'h00000000;
+//            4'h0: rc=32'h00000000;
+//            4'hb: rc=32'h00000000;
+//            4'hc: rc=32'h00000000;
+//            4'he: rc=32'h00000000;
+//            4'hf: rc=32'h00000000;
+            
+            default: rc=32'h00000000;
             
           endcase
 //          end
