@@ -36,7 +36,7 @@ module AES_tb;
 
     // Clock generation
     always begin
-        #10 clk = ~clk;
+        #1 clk = ~clk;
     end
 
     // Initial block for stimulus

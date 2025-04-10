@@ -68,7 +68,7 @@ module AES_CMAC#(
     end
     
     always@(posedge clk) begin
-        $display("x1:%h x2:%h xOut:%h",x1,x2,xorOut);
+//        $display("x1:%h x2:%h xOut:%h",x1,x2,xorOut);
         if(reset) begin
             messAddra<=9'b0; 
             cmacAddra<=9'b0;
