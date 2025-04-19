@@ -19,7 +19,6 @@ module AES_CMAC#(
 
     wire [(128*11)-1:0] fullkeys;
     wire [127:0] key128 = 128'h000102030405060708090a0b0c0d0e0f;
-    reg [127:0] K2;
     reg [127:0] in; 
 //    wire [127:0] messIn;
 //    wire [127:0] cmacIn; 
@@ -39,7 +38,7 @@ module AES_CMAC#(
     reg [127:0] xin2;
     wire [127:0] out;
     reg [127:0] L;
-    reg [127:0] K1;
+    wire [127:0] K1,K2;
     wire flag;
     reg [31:0] size;
     
@@ -62,10 +61,10 @@ module AES_CMAC#(
 //    ram BRAM1 (clk, 1'b1,1'b1,1'b0,1'b0, messAddra,cmacAddra, dia, messIn,dib,cmacIn);
     AES_Encrypt inst1 (clk,rst, in, fullkeys, encrypted,flag,cntr,sIn1,sOut,addrkIn,key,xorOut);
 
-    always @(posedge clk) begin
-        K1 = (L << 1) ^ (L[127] ? C : 0); 
-        K2 = (K1 << 1) ^ (K1[127] ? C : 0); 
-    end
+//    always @(posedge clk) begin
+    assign K1 = (L << 1) ^ (L[127] ? C : 0); 
+    assign K2 = (K1 << 1) ^ (K1[127] ? C : 0); 
+//    end
     
     always@(posedge clk) begin
 //        $display("x1:%h x2:%h xOut:%h",x1,x2,xorOut);
@@ -140,7 +139,7 @@ module AES_CMAC#(
     
                             if(cntr==46)begin
     //                            $display("rem: ",len%16'd128);
-                                if(len%16'd128) in<=cmacReg^cmacIn^K2;
+                                if(len%128) in<=cmacReg^cmacIn^K2;
                                 else in<=cmacReg^cmacIn^K1;          
                             end
                             if(flag) tag<=encrypted;
